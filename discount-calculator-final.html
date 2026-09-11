@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interior Company Discount Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f3ee;
+      --surface: #ffffff;
+      --surface-soft: #faf7f2;
+      --surface-accent: #efe4d7;
+      --primary: #1f4a45;
+      --primary-2: #305d56;
+      --text: #1c1b19;
+      --muted: #6f6a63;
+      --line: #d8cec1;
+      --success-soft: #d8ead8;
+      --success-soft-2: #c8e0c7;
+      --shadow: 0 16px 40px rgba(28, 27, 25, 0.08);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Manrope', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(239, 228, 215, 0.85), transparent 30%),
+        linear-gradient(180deg, #fbf8f4 0%, var(--bg) 100%);
+    }
+
+    .hero {
+      padding: 28px 20px 14px;
+    }
+
+    .shell {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 0 24px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(250,247,242,0.98));
+      border: 1px solid rgba(31, 74, 69, 0.1);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -70px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(31, 74, 69, 0.06);
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 3vw, 3.4rem);
+      line-height: 1.05;
+      max-width: 11ch;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 58ch;
+      line-height: 1.7;
+      font-size: 0.98rem;
+    }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, 1fr));
+      gap: 14px;
+      align-self: end;
+    }
+
+    .point {
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(31, 74, 69, 0.08);
+      border-radius: 18px;
+      padding: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .point strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+      color: var(--primary);
+    }
+
+    .point span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .main {
+      padding: 14px 20px 40px;
+    }
+
+    .calculator {
+      background: var(--surface);
+      border: 1px solid rgba(31, 74, 69, 0.12);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 24px;
+      border-bottom: 1px solid rgba(31, 74, 69, 0.08);
+      background: linear-gradient(180deg, #fff, var(--surface-soft));
+      flex-wrap: wrap;
+    }
+
+    .toolbar h2 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .toolbar small {
+      color: var(--muted);
+      display: block;
+      margin-top: 4px;
+      font-size: 0.92rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: none;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 10px 18px rgba(31, 74, 69, 0.18);
+    }
+    .btn-secondary {
+      background: var(--surface-accent);
+      color: var(--text);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      padding: 20px;
+      background: linear-gradient(180deg, #fff, #fcfaf7);
+    }
+
+    table {
+      width: 100%;
+      min-width: 1120px;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 12px 10px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 0.94rem;
+    }
+
+    thead th {
+      background: #f3ece4;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .row-head {
+      background: #fbf8f4;
+      font-weight: 800;
+      white-space: nowrap;
+      min-width: 150px;
+    }
+
+    .green { background: var(--success-soft); font-weight: 800; }
+    .green-dark { background: var(--success-soft-2); font-weight: 800; }
+    .merge-cell { font-size: 1.08rem; }
+
+    input {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #d9d3ca;
+      border-radius: 12px;
+      background: #fff;
+      padding: 10px 12px;
+      text-align: center;
+      font: inherit;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    input:focus {
+      outline: 2px solid rgba(31, 74, 69, 0.18);
+      border-color: var(--primary);
+    }
+
+    .result { font-variant-numeric: tabular-nums; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 18px;
+      padding: 0 20px 22px;
+      background: linear-gradient(180deg, #fcfaf7 0%, #f8f4ef 100%);
+    }
+
+    .metric {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(31, 74, 69, 0.08);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .metric-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .metric-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 980px) {
+      .hero-card { grid-template-columns: 1fr; }
+      .summary { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .hero, .main { padding-left: 14px; padding-right: 14px; }
+      .hero-card, .toolbar { padding: 20px; }
+      .summary { grid-template-columns: 1fr; }
+      .brand { align-items: flex-start; }
+      h1 { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="main">
+    <div class="shell">
+      <div class="nav">
+        <div class="brand">
+          <img src="http://interiorcompany.com/_next/static/media/interior-logo.81cc36fb.svg" alt="Interior Company logo">
+          <div class="brand-copy">
+            <span class="eyebrow">Interior Company</span>
+            <span>Discount Calculator</span>
+          </div>
+        </div>
+      </div>
+      <section class="calculator">
+        <div class="toolbar">
+          <div>
+            <h2>Quote Discount Sheet</h2>
+            <small>Use this screen to calculate line-item discounts, quote value, savings, and final total cost.</small>
+          </div>
+          <div class="actions">
+                        <button class="btn-primary" id="resetBtn">Reset</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Woodwork</th>
+                <th>Accessories</th>
+                <th>Fitting</th>
+                <th>Onsite Service</th>
+                <th>Store Product</th>
+                <th>Custom</th>
+                <th>Handling Fee %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="row-head">Value</td>
+                <td><input type="number" step="0.01" id="v1"></td>
+                <td><input type="number" step="0.01" id="v2"></td>
+                <td><input type="number" step="0.01" id="v3"></td>
+                <td><input type="number" step="0.01" id="v4"></td>
+                <td><input type="number" step="0.01" id="v5"></td>
+                <td><input type="number" step="0.01" id="v6"></td>
+                <td class="green result" rowspan="4">
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <input type="number" step="0.01" id="handlingFeePct" value="12" style="max-width:90px;">
+                  <span>%</span>
+                </div>
+                <div id="handlingFeeValue" style="font-weight:800;color:var(--primary);">0.00</div>
+              </div>
+            </td>
+              </tr>
+              <tr>
+                <td class="row-head">Discount %</td>
+                <td><input type="number" step="0.01" id="d1" max="40"></td>
+                <td><input type="number" step="0.01" id="d2" max="0"></td>
+                <td><input type="number" step="0.01" id="d3" max="0"></td>
+                <td><input type="number" step="0.01" id="d4" max="5"></td>
+                <td><input type="number" step="0.01" id="d5" max="5"></td>
+                <td><input type="number" step="0.01" id="d6" max="5"></td>
+              </tr>
+              <tr>
+                <td class="row-head">Discounted</td>
+                <td class="green result" id="discounted1">0.00</td>
+                <td class="green result" id="discounted2">0.00</td>
+                <td class="green result" id="discounted3">0.00</td>
+                <td class="green result" id="discounted4">0.00</td>
+                <td class="green result" id="discounted5">0.00</td>
+                <td class="green result" id="discounted6">0.00</td>
+              </tr>
+              <tr>
+                <td class="row-head">Post Discount</td>
+                <td class="green result" id="post1">0.00</td>
+                <td class="green result" id="post2">0.00</td>
+                <td class="green result" id="post3">0.00</td>
+                <td class="green result" id="post4">0.00</td>
+                <td class="green result" id="post5">0.00</td>
+                <td class="green result" id="post6">0.00</td>
+              </tr>
+              <tr>
+                <td class="row-head">Total Cost</td>
+                <td colspan="7" class="green-dark result merge-cell" id="totalCost">0.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="summary">
+          <div class="metric">
+            <div class="metric-label">Quote Value</div>
+            <div class="metric-value" id="quoteValue">0.00</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Total Cost</div>
+            <div class="metric-value" id="summaryTotalCost">0.00</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Saving</div>
+            <div class="metric-value" id="savingValue">0.00</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const valueIds = ['v1','v2','v3','v4','v5','v6'];
+    const discountIds = ['d1','d2','d3','d4','d5','d6'];
+    const discountLimits = [40, 0, 0, 5, 5, 5];
+
+    const num = id => parseFloat(document.getElementById(id).value) || 0;
+    const fmt = n => n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    function calculate() {
+      let sumValues = 0;
+      let sumDiscounted = 0;
+      let postSum = 0;
+
+      valueIds.forEach((vid, index) => {
+        const did = discountIds[index];
+        const value = num(vid);
+        let discountPercent = num(did);
+        const limit = discountLimits[index];
+
+        if (discountPercent > limit) {
+          discountPercent = limit;
+          document.getElementById(did).value = limit;
+        }
+        if (discountPercent < 0) {
+          discountPercent = 0;
+          document.getElementById(did).value = 0;
+        }
+
+        const discountRate = discountPercent / 100;
+        const discounted = value * discountRate;
+        const post = value - discounted;
+
+        sumValues += value;
+        sumDiscounted += discounted;
+        postSum += post;
+
+        document.getElementById(`discounted${index + 1}`).textContent = fmt(discounted);
+        document.getElementById(`post${index + 1}`).textContent = fmt(post);
+      });
+
+      let handlingFeePct = num('handlingFeePct');
+      if (handlingFeePct < 10) {
+        handlingFeePct = 10;
+        document.getElementById('handlingFeePct').value = 10;
+      }
+      const handlingFee = sumValues * (handlingFeePct / 100);
+      const totalCost = postSum + handlingFee;
+      const quoteValue = sumValues + handlingFee;
+      const saving = quoteValue - totalCost;
+
+      
+
+      document.getElementById('totalCost').textContent = fmt(totalCost);
+      document.getElementById('quoteValue').textContent = fmt(quoteValue);
+            document.getElementById('handlingFeeValue').textContent = fmt(handlingFee);
+  document.getElementById('summaryTotalCost').textContent = fmt(totalCost);
+      document.getElementById('savingValue').textContent = fmt(saving);
+    }
+
+    [...valueIds, ...discountIds, 'handlingFeePct'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calculate);
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      [...valueIds, ...discountIds].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('handlingFeePct').value = 12;
+      calculate();
+    });
+
+    document.getElementById('fillSample').addEventListener('click', () => {
+      const sampleValues = [100000, 25000, 15000, 10000, 8000, 12000];
+      const sampleDiscounts = [10, 0, 0, 5, 5, 5];
+      valueIds.forEach((id, i) => document.getElementById(id).value = sampleValues[i]);
+      discountIds.forEach((id, i) => document.getElementById(id).value = sampleDiscounts[i]);
+      calculate();
+    });
+
+    calculate();
+  </script>
+</body>
+</html>
